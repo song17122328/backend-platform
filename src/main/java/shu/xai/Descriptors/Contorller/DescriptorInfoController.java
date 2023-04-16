@@ -29,7 +29,7 @@ public class DescriptorInfoController {
         System.out.println(page.toString());
         // 如果当前页码值大于总页码值，那么重新执行查询操作，使用最大页码值作为当前页码值
         if (PageNum > page.getTotalPages()) {
-            return descriptorInfoService.findByPage((int) page.getTotalPages(), PageSize, Info);
+            return descriptorInfoService.findByPage(page.getTotalPages(), PageSize, Info);
         }
         return descriptorInfoService.findByPage(PageNum,PageSize,Info);
     }
@@ -53,5 +53,6 @@ public class DescriptorInfoController {
         System.out.println("通过对象修改被调用了");
         return descriptorInfoService.upsertByObj(info);
     }
+
 
 }
