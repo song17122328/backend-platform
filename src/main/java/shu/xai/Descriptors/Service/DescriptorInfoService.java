@@ -56,4 +56,8 @@ public class DescriptorInfoService {
         System.out.println(descriptorInfoDao.upsertByObj(Info));
         return descriptorInfoDao.upsertByObj(Info);
     }
+
+    public DescriptorInfo updateByNodeName(DescriptorInfo descriptorInfo,String OldName) {
+        return descriptorInfoDao.updateByNodeName(descriptorInfo,OldName);
+    }
 }

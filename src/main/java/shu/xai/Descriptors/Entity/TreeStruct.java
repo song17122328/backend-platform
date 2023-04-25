@@ -3,6 +3,8 @@ package shu.xai.Descriptors.Entity;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import shu.xai.Descriptors.Vo.AddTreeNode;
+import shu.xai.Descriptors.Vo.TreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,19 @@ public class TreeStruct {
     private ArrayList<String> ChildArray;
     private Integer LevelHierarchy;
     private String Type;
+
+    public TreeStruct() {
+    }
+
+
+    public TreeStruct(AddTreeNode addTreeNode) {
+        System.out.println(addTreeNode);
+        this.NodeName=addTreeNode.getNodeName();
+        this.RootName=addTreeNode.getRootName();
+        this.Type=addTreeNode.getTreeType();
+        this.LevelHierarchy= Integer.valueOf(addTreeNode.getLevelHierarchy());
+    }
+
 
 
 

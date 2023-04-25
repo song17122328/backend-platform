@@ -87,7 +87,7 @@ public class TreeNodeService {
      * 递归列表
      * 结束条件为所遍历的节点无下一级节点
      *
-     * @param list 查询获得的所有部门数据
+     * @param list 查询获得的所有数据
      * @param root 顶级节点
      */
     private void recursionFind(TreeStruct root,List<TreeStruct> list, TreeNode treeNode) {
@@ -141,7 +141,7 @@ public class TreeNodeService {
     public TreeNode getDescriptorTree(String type,String NodeName) {
         List<TreeStruct> Structs=treeStructDao.findByType(type);
         if (NodeName!=null){
-            TreeStruct localNode = treeStructDao.findByNodeName(NodeName);
+            TreeStruct localNode = treeStructDao.findByTypeAndNodeName(type,NodeName);
             return buildDeepTree(localNode,Structs);
         }
         return buildDeepTree(null,Structs);

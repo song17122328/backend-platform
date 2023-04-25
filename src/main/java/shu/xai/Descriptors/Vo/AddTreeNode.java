@@ -10,50 +10,75 @@ public class AddTreeNode {
     private String Id;
     private String NodeName;
     private String ZhName;
-    private Integer LevelHierarchy;
     private String ConceptHierarchy;
     private String Introduce;
     private String Source;
     private String Formula;
-//   可视化中与antV G6中type字段冲突，故去掉
-//    private String Type;
+//   与可视化中antV G6中type字段冲突，故修改为TreeType
+    private String TreeType;
     private String Score;
     private List<AddTreeNode> Children;
-
-
-
-    public AddTreeNode(TreeStruct treeStruct, DescriptorInfo descriptorInfo) {
-        Id = String.valueOf(treeStruct.getId().getCounter());
-        NodeName = treeStruct.getNodeName();
-        ZhName = descriptorInfo.getZhName();
-        LevelHierarchy = treeStruct.getLevelHierarchy();
-
-        ConceptHierarchy = descriptorInfo.getConceptHierarchy();
-        Introduce = descriptorInfo.getIntroduce();
-        Source = descriptorInfo.getSource();
-        Formula = descriptorInfo.getFormula();
-    }
-
-    public AddTreeNode() {
-
-    }
+//    待添加结点的父节点名字
+    private String FatherName;
+//    待修改结点的原名
+    private String OldName;
+//    根节点
+    private String RootName;
+// 水平层级
+    private String LevelHierarchy;
 
     @Override
     public String toString() {
-        return "Tree{" +    
-                "id='" + Id + '\'' +
+        return "AddTreeNode{" +
+                "Id='" + Id + '\'' +
                 ", NodeName='" + NodeName + '\'' +
                 ", ZhName='" + ZhName + '\'' +
-                ", LevelHierarchy=" + LevelHierarchy +
                 ", ConceptHierarchy='" + ConceptHierarchy + '\'' +
                 ", Introduce='" + Introduce + '\'' +
                 ", Source='" + Source + '\'' +
                 ", Formula='" + Formula + '\'' +
-//                ", Type='" + Type + '\'' +
+                ", TreeType='" + TreeType + '\'' +
                 ", Score='" + Score + '\'' +
                 ", Children=" + Children +
+                ", FatherName='" + FatherName + '\'' +
+                ", OldName='" + OldName + '\'' +
+                ", RootName='" + RootName + '\'' +
+                ", LevelHierarchy='" + LevelHierarchy + '\'' +
                 '}';
     }
+
+    public String getOldName() {
+        return OldName;
+    }
+
+    public void setOldName(String oldName) {
+        OldName = oldName;
+    }
+
+    public String getLevelHierarchy() {
+        return LevelHierarchy;
+    }
+
+    public void setLevelHierarchy(String levelHierarchy) {
+        LevelHierarchy = levelHierarchy;
+    }
+
+    public String getTreeType() {
+        return TreeType;
+    }
+
+    public void setTreeType(String treeType) {
+        TreeType = treeType;
+    }
+
+    public String getFatherName() {
+        return FatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        FatherName = fatherName;
+    }
+
 
     public String getId() {
         return Id;
@@ -79,13 +104,6 @@ public class AddTreeNode {
         ZhName = zhName;
     }
 
-    public Integer getLevelHierarchy() {
-        return LevelHierarchy;
-    }
-
-    public void setLevelHierarchy(Integer levelHierarchy) {
-        LevelHierarchy = levelHierarchy;
-    }
 
     public String getConceptHierarchy() {
         return ConceptHierarchy;
@@ -135,4 +153,11 @@ public class AddTreeNode {
         Children = children;
     }
 
+    public String getRootName() {
+        return RootName;
+    }
+
+    public void setRootName(String rootName) {
+        RootName = rootName;
+    }
 }

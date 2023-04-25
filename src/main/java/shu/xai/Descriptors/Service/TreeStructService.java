@@ -32,6 +32,16 @@ public class TreeStructService {
     }
 
     /**
+     * 根据对象查询
+     *
+     * @param info 传输过来的数据
+     * @return 查询结果哦
+     */
+    public List<TreeStruct> findByObj(TreeStruct info) {
+        return treeStructDao.findByObj(info);
+    }
+
+    /**
      * 通过id查询
      * @param id 接收id
      * @return 查询对象
@@ -70,4 +80,13 @@ public class TreeStructService {
         return treeStructDao.findByType(type);
     }
 
+    /**
+     *  通过Type和NodeName查询结点
+     * @param type 类型 ，
+     * @param NodeName 节点名
+     * @return 查询列表
+     */
+    public TreeStruct findByTypeAndNodeName(String type,String NodeName){
+        return treeStructDao.findByTypeAndNodeName(type,NodeName);
+    }
 }

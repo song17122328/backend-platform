@@ -3,6 +3,8 @@ package shu.xai.Descriptors.Entity;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import shu.xai.Descriptors.Vo.AddTreeNode;
+import shu.xai.Descriptors.Vo.TreeNode;
 
 
 /**
@@ -18,6 +20,26 @@ public class DescriptorInfo {
     private String Source;
     private String Formula;
     private String ConceptHierarchy;
+
+    public DescriptorInfo() {
+    }
+    public DescriptorInfo(AddTreeNode addTreeNode) {
+        this.NodeName=addTreeNode.getNodeName();
+        this.ZhName=addTreeNode.getZhName();
+        this.Introduce=addTreeNode.getIntroduce();
+        this.ConceptHierarchy=addTreeNode.getConceptHierarchy();
+        this.Formula=addTreeNode.getFormula();
+        this.Source=addTreeNode.getSource();
+    }
+
+    public DescriptorInfo(TreeNode treeNode) {
+        this.NodeName=treeNode.getNodeName();
+        this.ZhName=treeNode.getZhName();
+        this.Introduce=treeNode.getIntroduce();
+        this.ConceptHierarchy=treeNode.getConceptHierarchy();
+        this.Formula=treeNode.getFormula();
+        this.Source=treeNode.getSource();
+    }
 
 
     public ObjectId getId() {

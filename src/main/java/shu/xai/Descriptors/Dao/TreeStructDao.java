@@ -71,6 +71,35 @@ public class TreeStructDao {
         return PageableExecutionUtils.getPage(list, pageable, () -> count);
     }
 
+    public List<TreeStruct> findByObj(TreeStruct struct) {
+//        新建查询对象
+        Query query = new Query();
+//        新建SQL对象
+        Criteria criteria = new Criteria();
+//        编写SQL条件语句
+        if (struct.getNodeName() != null && !struct.getNodeName().isEmpty()) {
+            criteria.and("NodeName").regex(struct.getNodeName());
+        }
+        if (struct.getRootName() != null && !struct.getRootName().isEmpty()) {
+            criteria.and("RootName").regex(struct.getRootName());
+        }
+        if (struct.getType() != null && !struct.getType().isEmpty()) {
+            criteria.and("Type").regex(struct.getType());
+        }
+        //        LevelHierarchy为Integer类型,is 为精确查找；regex为模糊查找
+        if (struct.getLevelHierarchy() != null) {
+            System.out.println(struct.getLevelHierarchy());
+            criteria.and("LevelHierarchy").is(struct.getLevelHierarchy());
+        }
+        if (struct.getChildArray() != null && !struct.getChildArray().isEmpty()) {
+            criteria.and("ChildArray").is(struct.getChildArray().get(0));
+        }
+
+//        SQL语句插入到查询中
+        query.addCriteria(criteria);
+        return mongoTemplate.find(query, TreeStruct.class);
+    }
+
 //    根据类型查询
 public List<TreeStruct> findByType(String type) {
         // 新建查询对象
@@ -88,13 +117,16 @@ public List<TreeStruct> findByType(String type) {
 }
 
     //    根据节点名查询结点
-    public TreeStruct findByNodeName(String name) {
+    public TreeStruct findByTypeAndNodeName(String type,String name) {
         Query query = new Query();
 //        新建SQL对象
         Criteria criteria = new Criteria();
 //        编写SQL条件语句
         if (name != null && !name.isEmpty()) {
             criteria.and("NodeName").is(name);
+        }
+        if (type != null && !type.isEmpty()) {
+            criteria.and("Type").is(type);
         }
         query.addCriteria(criteria);
         return mongoTemplate.find(query, TreeStruct.class).get(0);
@@ -126,7 +158,8 @@ public List<TreeStruct> findByType(String type) {
     Mongodb 会把 obj 对象替换为集合内已存在的记录；如果不存在，则会插入 obj 对象。
 */
 public TreeStruct upsertByObj(TreeStruct descriptorInfo) {
-    System.out.println(descriptorInfo.getId());
+    System.out.println("描述符结构根据对象修改，id为："+descriptorInfo.getId());
     return  mongoTemplate.save(descriptorInfo);
     }
+
 }

@@ -1,6 +1,7 @@
 package shu.xai.Descriptors.Dao;
 
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import shu.xai.Descriptors.Entity.DescriptorInfo;
@@ -68,7 +70,7 @@ public class DescriptorInfoDao {
         return PageableExecutionUtils.getPage(list, pageable, () -> count);
     }
 
-//    根据节点名查询结点
+//    根据节点名查询结点；若查询不到则返回一个新的结点
     public DescriptorInfo findByNodeName(String name) {
         Query query = new Query();
 //        新建SQL对象
@@ -79,8 +81,14 @@ public class DescriptorInfoDao {
         }
         query.addCriteria(criteria);
         List<DescriptorInfo> descriptorInfos = mongoTemplate.find(query, DescriptorInfo.class);
-        if (descriptorInfos.size()==0){ return new DescriptorInfo();}
-        return mongoTemplate.find(query, DescriptorInfo.class).get(0);
+//     找到正确的对象再返回，若没有正确的对象，则返回空
+        for (DescriptorInfo info:descriptorInfos){
+            if (info.getNodeName().length()==name.length())
+                {
+                    return info;
+                }
+        }
+        return new DescriptorInfo();
     }
 
 
@@ -113,4 +121,15 @@ public DescriptorInfo upsertByObj(DescriptorInfo descriptorInfo) {
     System.out.println(descriptorInfo.getId());
     return  mongoTemplate.save(descriptorInfo);
     }
+
+//    根据节点名修改
+public DescriptorInfo updateByNodeName(DescriptorInfo descriptorInfo,String OldName) {
+//    根据OldName查到Id
+    DescriptorInfo  Info= findByNodeName(OldName);
+    ObjectId id = Info.getId();
+//    更新id
+    descriptorInfo.setId(id);
+    return  mongoTemplate.save(descriptorInfo);
 }
+}
+
