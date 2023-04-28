@@ -38,6 +38,7 @@ public class TreeController {
     public TreeNode getDescriptorTreeByNode(@PathVariable String type,@PathVariable String nodeName){
         return treeNodeService.getDescriptorTree(type,nodeName);
     }
+
 // 通过父节点名字和类型增加一个孩子
     @PutMapping()
     public String AddChildByFatherNode(@RequestBody AddTreeNode addTreeNode){
@@ -207,4 +208,7 @@ public class TreeController {
 //        没有孩子则删除当前结点
         treeStructService.removeById(Node.getId());
     }
+
+
+
 }

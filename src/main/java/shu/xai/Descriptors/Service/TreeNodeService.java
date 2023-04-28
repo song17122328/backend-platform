@@ -126,6 +126,7 @@ public class TreeNodeService {
         TreeNode treeNode=transformToTreeNode(localNode);
 //        递归向下扩建根节点
         recursionFind(localNode, treeStructs,treeNode);
+        treeNode.setFrom(localNode.getType());
         return treeNode;
     }
 

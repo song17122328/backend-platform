@@ -2,11 +2,13 @@ package shu.xai.Descriptors.Vo;
 
 import shu.xai.Descriptors.Entity.DescriptorInfo;
 import shu.xai.Descriptors.Entity.TreeStruct;
+import sun.reflect.generics.tree.Tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //此java对象存储树形数据
-public class TreeNode {
+public class TreeNode implements Comparable<TreeNode>{
     private String Id;
     private String NodeName;
     private String ZhName;
@@ -15,18 +17,50 @@ public class TreeNode {
     private String Introduce;
     private String Source;
     private String Formula;
-//   可视化中与antV G6中type字段冲突，故去掉
-//    private String Type;
+//  若改树为融合树，则字段表示该结点来自哪棵树
+    private String from;
     private String Score;
     private List<TreeNode> Children;
 
+    public TreeNode() {
+
+    }
+    public String getFrom() {
+        return from;
+    }
+
+    public TreeNode TreeNodeForFusion(TreeNode treeNode){
+        TreeNode node = new TreeNode();
+        node.setId(treeNode.getId());
+        node.setNodeName(treeNode.getNodeName());
+        node.setZhName(treeNode.getZhName()) ;
+        node.setLevelHierarchy(treeNode.getLevelHierarchy());
+        node.setConceptHierarchy(treeNode.getConceptHierarchy()) ;
+        node.setIntroduce(treeNode.getIntroduce()) ;
+        node.setSource(treeNode.getSource()) ;
+        node.setFormula(treeNode.getFormula()) ;
+        node.setScore(treeNode.getScore()) ;
+        node.setFrom(treeNode.getFrom());
+        return node;
+    }
+
+    //    重写排序方法
+    @Override
+    public int compareTo(TreeNode o) {
+        return this.NodeName.length() - o.NodeName.length();
+    }
 
 
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
     public TreeNode(TreeStruct treeStruct, DescriptorInfo descriptorInfo) {
         Id = String.valueOf(treeStruct.getId().getCounter());
         NodeName = treeStruct.getNodeName();
         ZhName = descriptorInfo.getZhName();
         LevelHierarchy = treeStruct.getLevelHierarchy();
+        from = treeStruct.getType();
 
         ConceptHierarchy = descriptorInfo.getConceptHierarchy();
         Introduce = descriptorInfo.getIntroduce();
@@ -34,9 +68,6 @@ public class TreeNode {
         Formula = descriptorInfo.getFormula();
     }
 
-    public TreeNode() {
-
-    }
 
     @Override
     public String toString() {
@@ -49,7 +80,7 @@ public class TreeNode {
                 ", Introduce='" + Introduce + '\'' +
                 ", Source='" + Source + '\'' +
                 ", Formula='" + Formula + '\'' +
-//                ", Type='" + Type + '\'' +
+                ", from='" + from + '\'' +
                 ", Score='" + Score + '\'' +
                 ", Children=" + Children +
                 '}';
@@ -135,4 +166,11 @@ public class TreeNode {
         Children = children;
     }
 
+    public void addChild(TreeNode treeNode) {
+        TreeNode child = TreeNodeForFusion(treeNode);
+        if (Children==null) {
+            Children= new ArrayList<>();
+        }
+        Children.add(child);
+    }
 }
