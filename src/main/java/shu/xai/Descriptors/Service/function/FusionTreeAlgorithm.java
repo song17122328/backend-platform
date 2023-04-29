@@ -123,8 +123,6 @@ public class FusionTreeAlgorithm {
 
 
     public void Merger(TreeNode A, TreeNode B,TreeNode C){
-//        ArrayList<TreeNode> AConChildren = new ArrayList<>();
-//        ArrayList<TreeNode> BConChildren = new ArrayList<>();
         ArrayList<TreeNode> CChildren = new ArrayList<>();
         ArrayList<TreeNode> AChildren = new ArrayList<TreeNode>(A.getChildren());
         ArrayList<TreeNode> BChildren = new ArrayList<TreeNode>(B.getChildren());
@@ -132,9 +130,9 @@ public class FusionTreeAlgorithm {
         for(int i=0;i<A.getChildren().size();i++) {
             for(int j=0;j<B.getChildren().size();j++){
 //                System.out.println(B.getChildren().size());
-                if (Objects.equals(A.getChildren().get(i).getNodeName(), B.getChildren().get(j).getNodeName())) {
-//                    AConChildren.add(A.getChildren().get(i));
-//                    BConChildren.add(B.getChildren().get(j));
+                if (A.getChildren().get(i).getNodeName().equalsIgnoreCase(B.getChildren().get(j).getNodeName())) {
+
+//                    碰到相同的结点做融合操作
                     TreeNode node=A.getChildren().get(i);
                     node.setFrom("mix");
                     C.addChild(node);
