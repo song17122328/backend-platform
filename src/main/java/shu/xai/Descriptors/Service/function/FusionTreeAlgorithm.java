@@ -55,6 +55,7 @@ public class FusionTreeAlgorithm {
     public TreeNode GetFusionTree(TreeNode A,TreeNode B){
 //        新建一棵树作为融合树，执行融合算法，向融合树中增加结点
         TreeNode FusionTree = new TreeNode();
+        FusionTree.setId("90989");
         FusionTree.setNodeName(A.getFrom()+"and"+B.getFrom());
         FusionTree.setFrom("mix");
         FusionTree.setConceptHierarchy("FusionTree");
@@ -139,7 +140,7 @@ public class FusionTreeAlgorithm {
                     Recursion(A.getChildren().get(i),B.getChildren().get(j),C.getChildren().get(k));
                     k=k+1;
 //                共同元素已经添加，移除A,B里面的共同元素。使得A,B剩下的数组没有共同元素
-                    AChildren.remove(A.getChildren().get(i));
+                        AChildren.remove(A.getChildren().get(i));
                     BChildren.remove(B.getChildren().get(j));
 //                    System.out.println(CChildren);
                     break; //找到共同元素，则下面不需要再次寻找，跳出B的循环
