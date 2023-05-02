@@ -1,7 +1,7 @@
 package shu.xai.Descriptors.Service.function;
 
 
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.stereotype.Service;
 import shu.xai.Descriptors.Vo.TreeNode;
 

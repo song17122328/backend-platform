@@ -128,9 +128,10 @@ CREATE TABLE `sys_menu_info` (
 
 -- ----------------------------
 -- Records of sys_menu_info
+-- 导航菜单
 -- ----------------------------
 INSERT INTO `sys_menu_info` VALUES ('1', '1', '首页', '0', '1','el-icon-s-flag' );
-INSERT INTO `sys_menu_info` VALUES ('11', '2', '快速介绍', '1', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('11', '2', '快速开始', '1', '1','' );
 INSERT INTO `sys_menu_info` VALUES ('2', '1', '系统管理', '0','1','el-icon-s-tools');
 INSERT INTO `sys_menu_info` VALUES ('21', '2', '平台管理', '2', '1','' );
 INSERT INTO `sys_menu_info` VALUES ('22', '2', '用户管理', '2', '1','' );
@@ -138,10 +139,13 @@ INSERT INTO `sys_menu_info` VALUES ('23', '2', '用户信息', '2', '1','' );
 INSERT INTO `sys_menu_info` VALUES ('24', '2', '系统日志', '2', '1','' );
 INSERT INTO `sys_menu_info` VALUES ('25', '2', '菜单管理', '2', '1','' );
 INSERT INTO `sys_menu_info` VALUES ('26', '2', '操作管理', '2', '1' ,'');
-INSERT INTO `sys_menu_info` VALUES ('3', '1', '描述符树', '0', '1','el-icon-s-data');
-INSERT INTO `sys_menu_info` VALUES ('31', '2', '描述符树信息', '3', '1','' );
-INSERT INTO `sys_menu_info` VALUES ('32', '2', '描述符树可视化', '3', '1','' );
-INSERT INTO `sys_menu_info` VALUES ('33', '2', '描述符树文件上传', '3', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('3', '1', '描述符及描述符树处理', '0', '1','el-icon-s-data');
+INSERT INTO `sys_menu_info` VALUES ('31', '2', '文件上传、预览、导入', '3', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('32', '2', '数据库增删改查', '3', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('33', '2', '可视化增删改查', '3', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('34', '2', '描述符树融合', '3', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('35', '2', '描述符树冗余消除', '3', '1','' );
+INSERT INTO `sys_menu_info` VALUES ('36', '2', '重要度评分', '3', '1','' );
 INSERT INTO `sys_menu_info` VALUES ('4', '1', '机器学习', '0', '1','el-icon-s-marketing');
 INSERT INTO `sys_menu_info` VALUES ('41', '2', '机器学习信息', '4', '1','');
 INSERT INTO `sys_menu_info` VALUES ('5', '1', '关于我们', '0', '1','el-icon-phone');
