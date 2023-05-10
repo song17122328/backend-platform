@@ -14,6 +14,7 @@ import shu.xai.Descriptors.Vo.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/Tree")
@@ -39,78 +40,90 @@ public class TreeController {
         return treeNodeService.getDescriptorTree(type,nodeName);
     }
 
-// 通过父节点名字和类型增加一个孩子
+// 通过父节点ID增加一个孩子,
     @PutMapping()
     public String AddChildByFatherNode(@RequestBody AddTreeNode addTreeNode){
-//        描述符信息表增加数据
-        descriptorInfoService.upsertByObj(new DescriptorInfo(addTreeNode));
-//        描述符结构表增加数据 1、增加新节点；2、修改父节点孩子数组
-//        1、增加新节点
-        treeStructService.upsertByObj(new TreeStruct(addTreeNode));
-//        2、修改父节点的孩子数组
-        TreeStruct father = treeStructService.findByTypeAndNodeName(addTreeNode.getTreeType(), addTreeNode.getFatherName());
-//        修改其孩子数组
-        ArrayList<String> children=father.getChildArray();
+
+//        System.out.println(addTreeNode);
+//        1、找到父节点
+        TreeStruct father = treeStructService.findById(addTreeNode.getParentId());
+//        获取孩子数组
+        ArrayList<String> childrenName=father.getChildrenName();
+//        获取其孩子数组
+        ArrayList<String> childrenId=father.getChildrenId();
 //        1、若孩子数组为空
-        if(children==null){
-            children=new ArrayList<String>();
+        if(childrenName==null){
+            childrenName=new ArrayList<String>();
+        }
+        //
+        if(childrenId==null){
+            childrenId=new ArrayList<String>();
         }
 //        2、若已有此孩子
-        for (String child:children) {
-            if (Objects.equals(child, addTreeNode.getNodeName())) {
+        for (String childName:childrenName) {
+            if (Objects.equals(childName, addTreeNode.getNodeName())) {
                 return "已有此孩子节点";
             }
         }
-        children.add(addTreeNode.getNodeName());
-        father.setChildArray(children);
+//        若无此结点则增加
+        //        描述符结构表增加数据 1、增加新节点；2、修改父节点孩子数组
+//        1、增加新节点
+        TreeStruct child = new TreeStruct(addTreeNode);
+        String childNodeName = child.getNodeName();
+        String childId = child.getId();
+
+//        插入数据库
+        treeStructService.upsertByObj(child);
+
+
+        childrenName.add(childNodeName);
+        childrenId.add(childId);
+        father.setChildrenName(childrenName);
+        father.setChildrenId(childrenId);
+//        更新父节点
         treeStructService.upsertByObj(father);
+//        System.out.println(father);
+//        System.out.println(new TreeStruct(addTreeNode));
+        //        描述符信息表增加数据
+        descriptorInfoService.upsertByObj(new DescriptorInfo(addTreeNode));
         return "添加成功";
     }
+
 //    通过新的信息修改节点
     @PostMapping()
     public String EditByNode(@RequestBody AddTreeNode addTreeNode){
 //      获取需要的数据
         String newName = addTreeNode.getNodeName();
         String oldName = addTreeNode.getOldName();
-        String treeType = addTreeNode.getTreeType();
-//      修改信息关系：1、修改自身信息结点
+        //      修改信息关系：1、修改自身信息结点
         descriptorInfoService.updateByNodeName(new DescriptorInfo(addTreeNode),oldName);
 
+//        修改自身结构结构结点:先查询、更新节点名、通过对象修改
+        TreeStruct byId = treeStructService.findById(addTreeNode.getId());
+        byId.setNodeName(addTreeNode.getNodeName());
+        treeStructService.upsertByObj(byId);
+
 //      修改结构关系：
-//      0、构建父节点查询对象    1、找到父节点；    2、修改父节点的孩子数组  3、修改父节点
+//  1、找到父节点；    2、修改父节点的孩子数组  3、修改父节点
 //      4、构造自身查询对象      5、查询自身结点    6、修改自身
 
-//        0、构建父节点查询对象
-        TreeStruct findFather = new TreeStruct();
-        ArrayList<String> Children=new ArrayList<String>();
-        Children.add(oldName);
-        findFather.setChildArray(Children);
-        findFather.setType(treeType);
 
+        String FatherId=treeStructService.findById(addTreeNode.getId()).getParentId();
 //        1、查询父节点
-        TreeStruct father = treeStructService.findByObj(findFather).get(0);
+        TreeStruct father = treeStructService.findById(FatherId);
 //        2、修改其孩子数组
-        ArrayList<String> children=father.getChildArray();
-        for (int i=0;i<children.size();i++) {
-            if (Objects.equals(children.get(i), oldName)) {
-                children.set(i, newName);
+        System.out.println(father);
+        ArrayList<String> childrenName=father.getChildrenName();
+        for (int i=0;i<childrenName.size();i++) {
+            if (Objects.equals(childrenName.get(i), oldName)) {
+                childrenName.set(i, newName);
             }
         }
-        father.setChildArray(children);
+        father.setChildrenName(childrenName);
 //        3、修改父节点
         treeStructService.upsertByObj(father);
 
-
-//        4、构造自身查询对象
-        TreeStruct findSelf = new TreeStruct();
-        findSelf.setType(treeType);
-        findSelf.setNodeName(oldName);
-//        5、查询自身结点
-        TreeStruct self = treeStructService.findByObj(findSelf).get(0);
-//        6、修改自身
-        self.setNodeName(newName);
-        treeStructService.upsertByObj(self);
-        return "添加成功";
+        return "修改成功";
     }
 
     /**
@@ -124,36 +137,42 @@ public class TreeController {
 //          2、把所有孩子结点移到其父节点上
 //          3、删除当前子树
 //操作如下
-        //      获取需要的数据
-        String treeType = addTreeNode.getTreeType();
-        String nodeName=addTreeNode.getNodeName();
-        //        1、找到父节点：构建父节点查询对象
-        ArrayList<String> Children=new ArrayList<String>();
-        Children.add(nodeName);
-        TreeStruct findFather = new TreeStruct();
-        findFather.setChildArray(Children);
-        findFather.setType(treeType);
-//        查询到父节点
-        TreeStruct father = treeStructService.findByObj(findFather).get(0);
-        Children=father.getChildArray();
+
+//        查询当前结点
+        TreeStruct treeStruct = treeStructService.findById(addTreeNode.getId());
+//        让所有孩子指向父节点
+        if (treeStruct.getChildrenName()!=null){
+            for (String childId:treeStruct.getChildrenId()){
+                TreeStruct child = treeStructService.findById(childId);
+                child.setParentId(treeStruct.getParentId());
+                treeStructService.upsertByObj(child);
+            }
+        }
+//        查询寻父节点
+        String FatherID=treeStruct.getParentId();
+        TreeStruct father = treeStructService.findById(FatherID);
+//      让父节点指向所有孩子
+        ArrayList<String> childrenId = father.getChildrenId();
+        ArrayList<String> childrenName = father.getChildrenName();
 //        2、找到所有孩子
         List<AddTreeNode> childrenNode = addTreeNode.getChildren();
-        for (AddTreeNode child:childrenNode)
-        {
-            Children.add(child.getNodeName());
+        if(childrenNode!=null){
+            for (AddTreeNode child:childrenNode)
+            {
+                childrenName.add(child.getNodeName());
+                childrenId.add(child.getId());
+            }
         }
-        //        移除自身
-        Children.remove(nodeName);
-        father.setChildArray(Children);
+        //        移除父元素里面的自身
+        childrenName.remove(addTreeNode.getNodeName());
+        childrenId.remove(addTreeNode.getId());
+        father.setChildrenName(childrenName);
+        father.setChildrenId(childrenId);
 //        更新父节点
         treeStructService.upsertByObj(father);
 
-//        删除自身结点,构建对象查询获取id
-        TreeStruct struct = new TreeStruct();
-        struct.setType(addTreeNode.getTreeType());
-        struct.setNodeName(addTreeNode.getNodeName());
-        ObjectId id = treeStructService.findByObj(struct).get(0).getId();
-        treeStructService.removeById(id);
+//       删除自身节点
+        treeStructService.removeById(treeStruct.getId());
         return father.getNodeName();
 
     }
@@ -168,47 +187,39 @@ public class TreeController {
      */
     @DeleteMapping("/All")
     public String DeleteTree(@RequestBody AddTreeNode addTreeNode){
-        //      获取需要的数据
-        String treeType = addTreeNode.getTreeType();
-        String nodeName=addTreeNode.getNodeName();
-//        1、找到父节点：构建父节点查询对象
-        ArrayList<String> Children=new ArrayList<String>();
-        Children.add(nodeName);
-        TreeStruct findFather = new TreeStruct();
-        findFather.setChildArray(Children);
-        findFather.setType(treeType);
+
+        TreeStruct treeStruct = treeStructService.findById(addTreeNode.getId());
+        String parentId = treeStruct.getParentId();
 //        查询到父节点
-        TreeStruct father = treeStructService.findByObj(findFather).get(0);
+        TreeStruct father = treeStructService.findById(parentId);
 //        2、修改其孩子数组
-        ArrayList<String> children=father.getChildArray();
-        children.remove(nodeName);
-        father.setChildArray(children);
+        ArrayList<String> childrenId=father.getChildrenId();
+        ArrayList<String> childrenName = father.getChildrenName();
+        childrenName.remove(addTreeNode.getNodeName());
+        childrenId.remove(addTreeNode.getId());
+        father.setChildrenId(childrenId);
+        father.setChildrenName(childrenName);
 //        更新父节点
         treeStructService.upsertByObj(father);
 
 //        4、递归删除该结点及该节点所有孩子结点
-        DeleteRecursion(nodeName,treeType);
+        DeleteRecursion(addTreeNode.getId());
         return father.getNodeName();
     }
 
 //    递归删除子树
-    public void DeleteRecursion(String NodeName,String Type){
+    public void DeleteRecursion(String id){
         //构建孩子结点，递归
-        TreeStruct struct = new TreeStruct();
-        struct.setType(Type);
-        struct.setNodeName(NodeName);
-        TreeStruct Node = treeStructService.findByObj(struct).get(0);
-        ArrayList<String> childArray = Node.getChildArray();
-        if (childArray!=null && childArray.size() >0) {
-            for (String child:childArray){
+        TreeStruct Node = treeStructService.findById(id);
+        System.out.println("node为:"+Node+"，id为："+id);
+        ArrayList<String> childrenId = Node.getChildrenId();
+        if (childrenId!=null && childrenId.size() >0) {
+            for (String child:childrenId){
 //               找到到该完整节点
-                DeleteRecursion(child,Type);
+                DeleteRecursion(child);
             }
         }
 //        没有孩子则删除当前结点
         treeStructService.removeById(Node.getId());
     }
-
-
-
 }

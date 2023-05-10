@@ -47,7 +47,7 @@ public class TreeStructService {
      * @return 查询对象
      */
 
-    public TreeStruct findById(ObjectId id){
+    public TreeStruct findById(String id){
         return treeStructDao.findById(id);
     }
 
@@ -56,7 +56,7 @@ public class TreeStructService {
      * @param id 接收id
      * @return deleteCount，删除记录的条数
      */
-    public DeleteResult removeById(ObjectId id){
+    public DeleteResult removeById(String id){
         return treeStructDao.removeById(id);
     }
 
@@ -66,18 +66,19 @@ public class TreeStructService {
      * @return 修改后的对象数据
      */
     public TreeStruct upsertByObj(TreeStruct struct){
-        System.out.println("通过对象修改被调用了");
-        System.out.println(treeStructDao.upsertByObj(struct));
+//        System.out.println("通过对象修改被调用了");
+//        System.out.println(treeStructDao.upsertByObj(struct));
         return treeStructDao.upsertByObj(struct);
     }
+
 
     /**
      *  通过Type查询结点
      * @param type 类型
      * @return 查询列表
      */
-    public List<TreeStruct> findByType(String type){
-        return treeStructDao.findByType(type);
+    public List<TreeStruct> findByTreeType(String type){
+        return treeStructDao.findByTreeType(type);
     }
 
     /**
@@ -88,5 +89,10 @@ public class TreeStructService {
      */
     public TreeStruct findByTypeAndNodeName(String type,String NodeName){
         return treeStructDao.findByTypeAndNodeName(type,NodeName);
+    }
+
+
+    public List<String> findAllDistinctTreeTypes() {
+        return treeStructDao.findAllDistinctTreeTypes();
     }
 }

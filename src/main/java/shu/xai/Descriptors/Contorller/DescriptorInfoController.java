@@ -21,12 +21,8 @@ public class DescriptorInfoController {
     @GetMapping("{PageNum}/{PageSize}")
     public Page<DescriptorInfo> GetAll(@PathVariable int PageNum,@PathVariable int PageSize,
                                        DescriptorInfo Info){
-        System.out.println("查询函数被调用了");
-        System.out.println(PageNum);
-        System.out.println(PageSize);
-        System.out.println(Info);
+
         Page<DescriptorInfo> page=descriptorInfoService.findByPage(PageNum,PageSize,Info);
-        System.out.println(page.toString());
         // 如果当前页码值大于总页码值，那么重新执行查询操作，使用最大页码值作为当前页码值
         if (PageNum > page.getTotalPages()) {
             return descriptorInfoService.findByPage(page.getTotalPages(), PageSize, Info);

@@ -1,5 +1,8 @@
 package shu.xai.Descriptors.Vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 import shu.xai.Descriptors.Entity.DescriptorInfo;
 import shu.xai.Descriptors.Entity.TreeStruct;
 
@@ -19,13 +22,11 @@ public class AddTreeNode {
     private String Score;
     private List<AddTreeNode> Children;
 //    待添加结点的父节点名字
-    private String FatherName;
+    private String ParentId;
 //    待修改结点的原名
     private String OldName;
 //    根节点
-    private String RootName;
-// 水平层级
-    private String LevelHierarchy;
+
 
     @Override
     public String toString() {
@@ -40,11 +41,17 @@ public class AddTreeNode {
                 ", TreeType='" + TreeType + '\'' +
                 ", Score='" + Score + '\'' +
                 ", Children=" + Children +
-                ", FatherName='" + FatherName + '\'' +
+                ", ParentId='" + ParentId + '\'' +
                 ", OldName='" + OldName + '\'' +
-                ", RootName='" + RootName + '\'' +
-                ", LevelHierarchy='" + LevelHierarchy + '\'' +
                 '}';
+    }
+
+    public String getParentId() {
+        return ParentId;
+    }
+
+    public void setParentId(String parentId) {
+        ParentId = parentId;
     }
 
     public String getOldName() {
@@ -55,13 +62,7 @@ public class AddTreeNode {
         OldName = oldName;
     }
 
-    public String getLevelHierarchy() {
-        return LevelHierarchy;
-    }
 
-    public void setLevelHierarchy(String levelHierarchy) {
-        LevelHierarchy = levelHierarchy;
-    }
 
     public String getTreeType() {
         return TreeType;
@@ -69,14 +70,6 @@ public class AddTreeNode {
 
     public void setTreeType(String treeType) {
         TreeType = treeType;
-    }
-
-    public String getFatherName() {
-        return FatherName;
-    }
-
-    public void setFatherName(String fatherName) {
-        FatherName = fatherName;
     }
 
 
@@ -153,11 +146,6 @@ public class AddTreeNode {
         Children = children;
     }
 
-    public String getRootName() {
-        return RootName;
-    }
 
-    public void setRootName(String rootName) {
-        RootName = rootName;
-    }
+
 }

@@ -54,8 +54,7 @@ public class DescriptorInfoDao {
             criteria.and("Source").regex(info.getSource());
         }
 
-        System.out.println("分页模糊查询的Dao被调用了");
-//        System.out.println(criteria);
+
 //        SQL语句插入到查询中
         query.addCriteria(criteria);
 //        统计模糊查询数量
@@ -65,7 +64,6 @@ public class DescriptorInfoDao {
 //        加入分页查询配置
         query.with(pageable);
         List<DescriptorInfo> list = mongoTemplate.find(query, DescriptorInfo.class);
-//        System.out.println(list);
 //        返回查询结果
         return PageableExecutionUtils.getPage(list, pageable, () -> count);
     }
@@ -95,8 +93,7 @@ public class DescriptorInfoDao {
 //    根据ID查询
     public DescriptorInfo findById(ObjectId id) {
         DescriptorInfo descriptorInfo = mongoTemplate.findById(id,DescriptorInfo.class);
-        System.out.println("根据id查询的Dao被调用了,id为:"+id);
-//        System.out.println(descriptorInfo);
+
         return descriptorInfo;
     }
 
@@ -106,8 +103,7 @@ public class DescriptorInfoDao {
         Query query = new Query(Criteria.where("_id").is(id));
         DeleteResult result = mongoTemplate.remove(query, DescriptorInfo.class); //删除方法
         long count = result.getDeletedCount();
-        System.out.println(count);
-        System.out.println("根据id删除的Dao被调用了,id为:"+id);
+
         return result;
     }
 
@@ -118,7 +114,6 @@ public class DescriptorInfoDao {
     Mongodb 会把 obj 对象替换为集合内已存在的记录；如果不存在，则会插入 obj 对象。
 */
 public DescriptorInfo upsertByObj(DescriptorInfo descriptorInfo) {
-    System.out.println(descriptorInfo.getId());
     return  mongoTemplate.save(descriptorInfo);
     }
 

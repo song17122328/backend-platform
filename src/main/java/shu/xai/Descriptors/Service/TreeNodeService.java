@@ -40,7 +40,8 @@ public class TreeNodeService {
      */
     private TreeStruct getRoot(List<TreeStruct> treeStructs) {
         for (TreeStruct treeStruct : treeStructs) {
-            if (Objects.equals(treeStruct.getNodeName(), treeStruct.getRootName())) {
+//            根节点没有父节点，故根节点父节点为空
+            if(treeStruct.getParentId()==null || treeStruct.getParentId().isEmpty()){
                 return treeStruct;
             }
         }
@@ -55,7 +56,7 @@ public class TreeNodeService {
      */
     private List<TreeStruct> getChildNodeList(List<TreeStruct> treeStructs, TreeStruct FatherNode) {
         ArrayList<TreeStruct> childTreeStructList = new ArrayList<>();
-        ArrayList<String> childNameArray = FatherNode.getChildArray();
+        ArrayList<String> childNameArray = FatherNode.getChildrenName();
         // 如果孩子数组不为空，则遍历孩子数组，生成孩子结点列表
         if (childNameArray!=null && childNameArray.size()!=0){
             for (String childName: childNameArray)
@@ -126,7 +127,7 @@ public class TreeNodeService {
         TreeNode treeNode=transformToTreeNode(localNode);
 //        递归向下扩建根节点
         recursionFind(localNode, treeStructs,treeNode);
-        treeNode.setFrom(localNode.getType());
+        treeNode.setFrom(localNode.getTreeType());
         return treeNode;
     }
 
@@ -140,7 +141,7 @@ public class TreeNodeService {
      * @return 构建的描述符树
      */
     public TreeNode getDescriptorTree(String type,String NodeName) {
-        List<TreeStruct> Structs=treeStructDao.findByType(type);
+        List<TreeStruct> Structs=treeStructDao.findByTreeType(type);
         if (NodeName!=null){
             TreeStruct localNode = treeStructDao.findByTypeAndNodeName(type,NodeName);
             return buildDeepTree(localNode,Structs);

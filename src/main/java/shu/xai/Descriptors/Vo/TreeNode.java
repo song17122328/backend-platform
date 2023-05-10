@@ -1,5 +1,6 @@
 package shu.xai.Descriptors.Vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import shu.xai.Descriptors.Entity.DescriptorInfo;
 import shu.xai.Descriptors.Entity.TreeStruct;
 import sun.reflect.generics.tree.Tree;
@@ -9,6 +10,7 @@ import java.util.List;
 
 //此java对象存储树形数据
 public class TreeNode implements Comparable<TreeNode>{
+    @JsonProperty("_id")
     private String Id;
     private String NodeName;
     private String ZhName;
@@ -21,6 +23,16 @@ public class TreeNode implements Comparable<TreeNode>{
     private String from;
     private String Score;
     private List<TreeNode> Children;
+    //    待添加结点的父节点名字
+    private String FatherId;
+
+    public String getFatherId() {
+        return FatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        FatherId = fatherId;
+    }
 
     public TreeNode() {
 
@@ -41,6 +53,7 @@ public class TreeNode implements Comparable<TreeNode>{
         node.setFormula(treeNode.getFormula()) ;
         node.setScore(treeNode.getScore()) ;
         node.setFrom(treeNode.getFrom());
+        node.setFatherId(treeNode.getFatherId());
         return node;
     }
 
@@ -56,11 +69,11 @@ public class TreeNode implements Comparable<TreeNode>{
         this.from = from;
     }
     public TreeNode(TreeStruct treeStruct, DescriptorInfo descriptorInfo) {
-        Id = String.valueOf(treeStruct.getId().getCounter());
+        Id = treeStruct.getId();
         NodeName = treeStruct.getNodeName();
         ZhName = descriptorInfo.getZhName();
-        LevelHierarchy = treeStruct.getLevelHierarchy();
-        from = treeStruct.getType();
+        from = treeStruct.getTreeType();
+        FatherId=treeStruct.getParentId();
 
         ConceptHierarchy = descriptorInfo.getConceptHierarchy();
         Introduce = descriptorInfo.getIntroduce();
@@ -71,7 +84,7 @@ public class TreeNode implements Comparable<TreeNode>{
 
     @Override
     public String toString() {
-        return "Tree{" +    
+        return "Tree{" +
                 "id='" + Id + '\'' +
                 ", NodeName='" + NodeName + '\'' +
                 ", ZhName='" + ZhName + '\'' +

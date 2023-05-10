@@ -52,8 +52,8 @@ public class DescriptorInfoService {
      * @return 修改后的对象数据
      */
     public DescriptorInfo upsertByObj(DescriptorInfo Info){
-        System.out.println("通过对象修改被调用了");
-        System.out.println(descriptorInfoDao.upsertByObj(Info));
+//        System.out.println("通过对象修改被调用了");
+//        System.out.println(descriptorInfoDao.upsertByObj(Info));
         return descriptorInfoDao.upsertByObj(Info);
     }
 

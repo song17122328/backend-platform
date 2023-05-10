@@ -2,19 +2,22 @@ package shu.xai.Descriptors.Dao;
 
 
 import com.mongodb.client.result.DeleteResult;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.bson.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import shu.xai.Descriptors.Entity.DescriptorInfo;
 import shu.xai.Descriptors.Entity.TreeStruct;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.domain.Pageable;
+
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class TreeStructDao {
@@ -39,23 +42,15 @@ public class TreeStructDao {
         if (struct.getNodeName() != null && !struct.getNodeName().isEmpty()) {
             criteria.and("NodeName").regex(struct.getNodeName());
         }
-        if (struct.getRootName() != null && !struct.getRootName().isEmpty()) {
-            criteria.and("RootName").regex(struct.getRootName());
-        }
-        if (struct.getType() != null && !struct.getType().isEmpty()) {
-            criteria.and("Type").regex(struct.getType());
-        }
-    //        LevelHierarchy为Integer类型,is 为精确查找；regex为模糊查找
-        if (struct.getLevelHierarchy() != null) {
-            System.out.println(struct.getLevelHierarchy());
-            criteria.and("LevelHierarchy").is(struct.getLevelHierarchy());
-        }
-        if (struct.getChildArray() != null && !struct.getChildArray().isEmpty()) {
-            criteria.and("ChildArray").is(struct.getChildArray().get(0));
+
+        if (struct.getTreeType() != null && !struct.getTreeType().isEmpty()) {
+            criteria.and("TreeType").regex(struct.getTreeType());
         }
 
-        System.out.println("分页模糊查询的Dao被调用了");
-        System.out.println(criteria);
+        if (struct.getChildrenName() != null && !struct.getChildrenName().isEmpty()) {
+            criteria.and("ChildrenName").is(struct.getChildrenName().get(0));
+        }
+
 //        SQL语句插入到查询中
         query.addCriteria(criteria);
 //        统计模糊查询数量
@@ -64,9 +59,7 @@ public class TreeStructDao {
         Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), pageSize);
 //        加入分页查询配置
         query.with(pageable);
-        System.out.println(query);
         List<TreeStruct> list = mongoTemplate.find(query, TreeStruct.class);
-        System.out.println(list);
 //        返回查询结果
         return PageableExecutionUtils.getPage(list, pageable, () -> count);
     }
@@ -80,19 +73,13 @@ public class TreeStructDao {
         if (struct.getNodeName() != null && !struct.getNodeName().isEmpty()) {
             criteria.and("NodeName").regex(struct.getNodeName());
         }
-        if (struct.getRootName() != null && !struct.getRootName().isEmpty()) {
-            criteria.and("RootName").regex(struct.getRootName());
+
+        if (struct.getTreeType() != null && !struct.getTreeType().isEmpty()) {
+            criteria.and("TreeType").regex(struct.getTreeType());
         }
-        if (struct.getType() != null && !struct.getType().isEmpty()) {
-            criteria.and("Type").regex(struct.getType());
-        }
-        //        LevelHierarchy为Integer类型,is 为精确查找；regex为模糊查找
-        if (struct.getLevelHierarchy() != null) {
-            System.out.println(struct.getLevelHierarchy());
-            criteria.and("LevelHierarchy").is(struct.getLevelHierarchy());
-        }
-        if (struct.getChildArray() != null && !struct.getChildArray().isEmpty()) {
-            criteria.and("ChildArray").is(struct.getChildArray().get(0));
+
+        if (struct.getChildrenName() != null && !struct.getChildrenName().isEmpty()) {
+            criteria.and("ChildrenName").is(struct.getChildrenName().get(0));
         }
 
 //        SQL语句插入到查询中
@@ -101,18 +88,17 @@ public class TreeStructDao {
     }
 
 //    根据类型查询
-public List<TreeStruct> findByType(String type) {
+public List<TreeStruct> findByTreeType(String type) {
         // 新建查询对象
     Query query = new Query();
 //        新建SQL对象
     Criteria criteria = new Criteria();
 //        编写SQL条件语句
     if (type != null && !type.isEmpty()) {
-        criteria.and("Type").is(type);
+        criteria.and("TreeType").is(type);
     }
     query.addCriteria(criteria);
-    System.out.println("通过类型精确匹配findByType被调用了");
-    System.out.println(query);
+
     return mongoTemplate.find(query, TreeStruct.class);
 }
 
@@ -126,40 +112,52 @@ public List<TreeStruct> findByType(String type) {
             criteria.and("NodeName").is(name);
         }
         if (type != null && !type.isEmpty()) {
-            criteria.and("Type").is(type);
+            criteria.and("TreeType").is(type);
         }
         query.addCriteria(criteria);
         return mongoTemplate.find(query, TreeStruct.class).get(0);
     }
 
 //    根据ID查询
-    public TreeStruct findById(ObjectId id) {
-        TreeStruct descriptorInfo = mongoTemplate.findById(id,TreeStruct.class);
-        System.out.println("根据id查询的Dao被调用了,id为:"+id);
-//        System.out.println(descriptorInfo);
-        return descriptorInfo;
+    public TreeStruct findById(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        return mongoTemplate.findOne(query, TreeStruct.class);
     }
 
+
+
     //    根据ID删除
-    public DeleteResult removeById(ObjectId id) {
+
+    public DeleteResult removeById(String id) {
         //构建查询条件
         Query query = new Query(Criteria.where("_id").is(id));
         DeleteResult result = mongoTemplate.remove(query, TreeStruct.class); //删除方法
         long count = result.getDeletedCount();
-        System.out.println(count);
-        System.out.println("根据id删除的Dao被调用了,id为:"+id);
+
         return result;
     }
 
 
-/*修改——已有数据对象的情况下：save() 方法
-    db.collection.save ( obj )
-    obj 代表需要更新的对象，如果集合内部已经存在一个与 obj 相同的“_id”的记录，
-    Mongodb 会把 obj 对象替换为集合内已存在的记录；如果不存在，则会插入 obj 对象。
-*/
-public TreeStruct upsertByObj(TreeStruct descriptorInfo) {
-    System.out.println("描述符结构根据对象修改，id为："+descriptorInfo.getId());
-    return  mongoTemplate.save(descriptorInfo);
-    }
+    /*修改——已有数据对象的情况下：save() 方法
+        db.collection.save ( obj )
+        obj 代表需要更新的对象，如果集合内部已经存在一个与 obj 相同的“_id”的记录，
+        Mongodb 会把 obj 对象替换为集合内已存在的记录；如果不存在，则会插入 obj 对象。
+    */
+    public TreeStruct upsertByObj(TreeStruct treeStruct) {
+        return  mongoTemplate.save(treeStruct);
+        }
 
+
+
+
+    public List<String> findAllDistinctTreeTypes() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.group("TreeType"),
+                Aggregation.project().andExclude("_id").and("TreeType").previousOperation()
+        );
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "TreeStruct", Document.class);
+        List<String> treeTypes = results.getMappedResults().stream().map(doc -> doc.getString("TreeType")).collect(Collectors.toList());
+        return treeTypes;
+    }
 }
+
