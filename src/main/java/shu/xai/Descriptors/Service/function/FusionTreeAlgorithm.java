@@ -55,7 +55,7 @@ public class FusionTreeAlgorithm {
     public TreeNode GetFusionTree(TreeNode A,TreeNode B){
 //        新建一棵树作为融合树，执行融合算法，向融合树中增加结点
         TreeNode FusionTree = new TreeNode();
-        FusionTree.setId("90989");
+        FusionTree.setId(String.valueOf(UUID.randomUUID()));
         FusionTree.setNodeName(A.getFrom()+"and"+B.getFrom());
         FusionTree.setFrom("mix");
         FusionTree.setConceptHierarchy("FusionTree");
