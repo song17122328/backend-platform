@@ -32,7 +32,7 @@ public class TreeController {
 
     @GetMapping("/{type}")
     public TreeNode getDescriptorTreeByType(@PathVariable String type){
-        return treeNodeService.getDescriptorTree(type,null);
+        return treeNodeService. getDescriptorTree(type,null);
     }
 
     @GetMapping("/{type}/{nodeName}")
@@ -189,14 +189,21 @@ public class TreeController {
     public String DeleteTree(@RequestBody AddTreeNode addTreeNode){
 
         TreeStruct treeStruct = treeStructService.findById(addTreeNode.getId());
+
         String parentId = treeStruct.getParentId();
+        if (parentId==null || parentId.length()==0){
+//            说明是根节点，不需要修改其父亲
+            //        4、递归删除该结点及该节点所有孩子结点
+            DeleteRecursion(addTreeNode.getId());
+            return "删除成功";
+        }
 //        查询到父节点
         TreeStruct father = treeStructService.findById(parentId);
 //        2、修改其孩子数组
         ArrayList<String> childrenId=father.getChildrenId();
         ArrayList<String> childrenName = father.getChildrenName();
-        childrenName.remove(addTreeNode.getNodeName());
-        childrenId.remove(addTreeNode.getId());
+        childrenName.remove(treeStruct.getNodeName());
+        childrenId.remove(treeStruct.getId());
         father.setChildrenId(childrenId);
         father.setChildrenName(childrenName);
 //        更新父节点

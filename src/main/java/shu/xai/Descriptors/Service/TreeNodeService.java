@@ -56,14 +56,14 @@ public class TreeNodeService {
      */
     private List<TreeStruct> getChildNodeList(List<TreeStruct> treeStructs, TreeStruct FatherNode) {
         ArrayList<TreeStruct> childTreeStructList = new ArrayList<>();
-        ArrayList<String> childNameArray = FatherNode.getChildrenName();
+        ArrayList<String> childIdArray = FatherNode.getChildrenId();
         // 如果孩子数组不为空，则遍历孩子数组，生成孩子结点列表
-        if (childNameArray!=null && childNameArray.size()!=0){
-            for (String childName: childNameArray)
+        if (childIdArray!=null && childIdArray.size()!=0){
+            for (String childId: childIdArray)
             {
 //                遍历所有结点列表，把列表结点加入到孩子结点列表
                 for (TreeStruct treeStruct : treeStructs){
-                    if (treeStruct.getNodeName().equals(childName)) {
+                    if (treeStruct.getId().equals(childId)) {
 //                      返回TreeStruct类型的列表，生成的孩子结点列表为完整的TreeNode孩子结点列表
                         childTreeStructList.add(treeStruct);
                         }

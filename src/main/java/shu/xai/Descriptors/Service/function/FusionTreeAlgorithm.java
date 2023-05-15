@@ -58,6 +58,7 @@ public class FusionTreeAlgorithm {
         FusionTree.setId(String.valueOf(UUID.randomUUID()));
         FusionTree.setNodeName(A.getFrom()+"and"+B.getFrom());
         FusionTree.setFrom("mix");
+        FusionTree.setTreeType("fusion");
         FusionTree.setConceptHierarchy("FusionTree");
         FusionTree.setNodeName("FusionTreeRoot");
         FusionTree.setZhName("融合树根节点");
@@ -84,6 +85,7 @@ public class FusionTreeAlgorithm {
                 {
                     TreeNode node=A.getChildren().get(i);
                     node.setFrom("mix");
+                    node.setTreeType("fusion");
                     C.addChild(node);
 //                    System.out.println("C"+C);
                     Recursion(A.getChildren().get(i),B.getChildren().get(i),C.getChildren().get(i));
@@ -136,11 +138,12 @@ public class FusionTreeAlgorithm {
 //                    碰到相同的结点做融合操作
                     TreeNode node=A.getChildren().get(i);
                     node.setFrom("mix");
+                    node.setTreeType("fusion");
                     C.addChild(node);
                     Recursion(A.getChildren().get(i),B.getChildren().get(j),C.getChildren().get(k));
                     k=k+1;
 //                共同元素已经添加，移除A,B里面的共同元素。使得A,B剩下的数组没有共同元素
-                        AChildren.remove(A.getChildren().get(i));
+                    AChildren.remove(A.getChildren().get(i));
                     BChildren.remove(B.getChildren().get(j));
 //                    System.out.println(CChildren);
                     break; //找到共同元素，则下面不需要再次寻找，跳出B的循环
@@ -152,9 +155,22 @@ public class FusionTreeAlgorithm {
 //        处理孩子数组B，此时B还存在的元素，不包含A,B共同元素
         CChildren.addAll(AChildren);
         CChildren.addAll(BChildren);
+        for (TreeNode child:CChildren){
+            child.setTreeType("fusion");
+        }
         if (C.getChildren()==null){
             C.setChildren(new ArrayList<TreeNode>());
         }
         C.getChildren().addAll(CChildren);
+    }
+
+    public void UpdateId(TreeNode fusion){
+        fusion.setId(fusion.getId()+"_fusion");
+        fusion.setFatherId(fusion.getFatherId()+"_fusion");
+        if (fusion.getChildren()!=null &&fusion.getChildren().size()!=0){
+            for(TreeNode child:fusion.getChildren()){
+                UpdateId(child);
+            }
+        }
     }
 }

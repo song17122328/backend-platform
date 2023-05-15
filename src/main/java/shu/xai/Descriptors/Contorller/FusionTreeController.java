@@ -34,6 +34,9 @@ public class FusionTreeController {
                 fusion=fusionTreeAlgorithm.GetFusionTree(fusion, Trees.get(i));
             }
         }
+//        System.out.println(fusion);
+//        修改所有节点的id，以避免id重复
+        fusionTreeAlgorithm.UpdateId(fusion);
         return fusion;
     }
 }

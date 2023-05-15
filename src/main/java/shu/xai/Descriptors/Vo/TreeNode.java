@@ -23,6 +23,7 @@ public class TreeNode implements Comparable<TreeNode>{
     private String from;
     private String Score;
     private List<TreeNode> Children;
+    private String TreeType;
     //    待添加结点的父节点名字
     private String FatherId;
 
@@ -53,6 +54,7 @@ public class TreeNode implements Comparable<TreeNode>{
         node.setFormula(treeNode.getFormula()) ;
         node.setScore(treeNode.getScore()) ;
         node.setFrom(treeNode.getFrom());
+        node.setTreeType(treeNode.getTreeType());
         node.setFatherId(treeNode.getFatherId());
         return node;
     }
@@ -63,7 +65,13 @@ public class TreeNode implements Comparable<TreeNode>{
         return this.NodeName.length() - o.NodeName.length();
     }
 
+    public String getTreeType() {
+        return TreeType;
+    }
 
+    public void setTreeType(String treeType) {
+        TreeType = treeType;
+    }
 
     public void setFrom(String from) {
         this.from = from;
@@ -73,6 +81,7 @@ public class TreeNode implements Comparable<TreeNode>{
         NodeName = treeStruct.getNodeName();
         ZhName = descriptorInfo.getZhName();
         from = treeStruct.getTreeType();
+        TreeType="fusion";
         FatherId=treeStruct.getParentId();
 
         ConceptHierarchy = descriptorInfo.getConceptHierarchy();
