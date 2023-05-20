@@ -13,16 +13,16 @@ import java.util.*;
  *  递归融合算法 Recursion(A,B,C)； 无返回值，递归把C补全为融合树
  *  1、判断A==B？
  *      if(A==B) 则令C=commonAB(A=B)，判断A,B孩子数组是否相同，P(A,B)
- *          if(P(A,B))
+ *          if(Judge(A,B))
  *              遍历A的children，对每一个A.child, 找到其对应的B.child。递归执行R(A.child,B.child)
- *           if(!P(A,B))
+ *           if(!Judge(A,B))
  *              对A，B执行子树融合M(A,B)；C.children=M(A,B)
  *  2、if(A!=B) 程序出错
  */
 
 /**
  * 判断孩子数组是否相同：双层循环，只判断孩子的节点名是否一致，不深入判断——不判断孩子的孩子是否相同；
- *  J(A,B); return TRUE,FALSE
+ *  Judge(A,B); return TRUE,FALSE
  * 1、A.children==B.children?
  *      若相同，则返回True
  *      若不同，则返回False

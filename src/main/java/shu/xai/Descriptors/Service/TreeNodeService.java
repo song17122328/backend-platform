@@ -95,11 +95,11 @@ public class TreeNodeService {
         // 得到结构子节点列表
         List<TreeStruct> TreeStructList = getChildNodeList(list, root);
 
-//        得到完整子结点列表
         List<TreeNode> TreeNodeList=new ArrayList<>();
         for (TreeStruct SChild : TreeStructList) {
             TreeNodeList.add(transformToTreeNode(SChild));
-        }
+        }//        得到完整子结点列表
+
 
 //        添加完整孩子结点列表
         treeNode.setChildren(TreeNodeList);
@@ -148,5 +148,4 @@ public class TreeNodeService {
         }
         return buildDeepTree(null,Structs);
     }
-
 }
