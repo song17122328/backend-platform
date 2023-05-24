@@ -9,6 +9,8 @@ import shu.xai.Descriptors.Dao.MlDataDao;
 import shu.xai.Descriptors.Query.MlDataQuery;
 import shu.xai.Descriptors.Entity.MlData;
 
+import java.util.List;
+
 
 @Service
 public class MlDataService {
@@ -30,9 +32,11 @@ public class MlDataService {
 
     /**
      * 通过id查询
-     * @param id 接收id
      * @return 查询对象
      */
+    public List<MlData> findAll(){
+        return mlDataDao.findAll();
+    }
 
     public MlData findById(ObjectId id){
         return mlDataDao.findById(id);

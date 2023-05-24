@@ -22,6 +22,10 @@ public class MlDataDao {
     @Resource
     private MongoTemplate mongoTemplate;
 
+
+    public List<MlData> findAll(){
+        return mongoTemplate.findAll(MlData.class);
+    }
     /**
      * 条件分页查询
      *

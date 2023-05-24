@@ -3,7 +3,6 @@ package shu.xai.Descriptors.Vo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import shu.xai.Descriptors.Entity.DescriptorInfo;
 import shu.xai.Descriptors.Entity.TreeStruct;
-import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,25 +13,25 @@ public class TreeNode implements Comparable<TreeNode>{
     private String Id;
     private String NodeName;
     private String ZhName;
-    private Integer LevelHierarchy;
+    private Double LevelHierarchy;
     private String ConceptHierarchy;
     private String Introduce;
     private String Source;
     private String Formula;
 //  若改树为融合树，则字段表示该结点来自哪棵树
     private String from;
-    private String Score;
+    private Double Score=0.0;
     private List<TreeNode> Children;
     private String TreeType;
     //    待添加结点的父节点名字
-    private String FatherId;
+    private String ParentId;
 
-    public String getFatherId() {
-        return FatherId;
+    public String getParentId() {
+        return ParentId;
     }
 
-    public void setFatherId(String fatherId) {
-        FatherId = fatherId;
+    public void setParentId(String fatherId) {
+        ParentId = fatherId;
     }
 
     public TreeNode() {
@@ -55,7 +54,7 @@ public class TreeNode implements Comparable<TreeNode>{
         node.setScore(treeNode.getScore()) ;
         node.setFrom(treeNode.getFrom());
         node.setTreeType(treeNode.getTreeType());
-        node.setFatherId(treeNode.getFatherId());
+        node.setParentId(treeNode.getParentId());
         return node;
     }
 
@@ -82,7 +81,8 @@ public class TreeNode implements Comparable<TreeNode>{
         ZhName = descriptorInfo.getZhName();
         from = treeStruct.getTreeType();
         TreeType="fusion";
-        FatherId=treeStruct.getParentId();
+        ParentId=treeStruct.getParentId();
+        Score=treeStruct.getScore();
 
         ConceptHierarchy = descriptorInfo.getConceptHierarchy();
         Introduce = descriptorInfo.getIntroduce();
@@ -132,11 +132,11 @@ public class TreeNode implements Comparable<TreeNode>{
         ZhName = zhName;
     }
 
-    public Integer getLevelHierarchy() {
+    public Double getLevelHierarchy() {
         return LevelHierarchy;
     }
 
-    public void setLevelHierarchy(Integer levelHierarchy) {
+    public void setLevelHierarchy(Double levelHierarchy) {
         LevelHierarchy = levelHierarchy;
     }
 
@@ -172,11 +172,11 @@ public class TreeNode implements Comparable<TreeNode>{
         Formula = formula;
     }
 
-    public String getScore() {
+    public Double getScore() {
         return Score;
     }
 
-    public void setScore(String score) {
+    public void setScore(Double score) {
         Score = score;
     }
 

@@ -19,7 +19,7 @@ public class AddTreeNode {
     private String Formula;
 //   与可视化中antV G6中type字段冲突，故修改为TreeType
     private String TreeType;
-    private String Score;
+    private Double Score=0.0;
     private List<AddTreeNode> Children;
 //    待添加结点的父节点名字
     private String ParentId;
@@ -130,11 +130,11 @@ public class AddTreeNode {
         Formula = formula;
     }
 
-    public String getScore() {
+    public Double getScore() {
         return Score;
     }
 
-    public void setScore(String score) {
+    public void setScore(Double score) {
         Score = score;
     }
 

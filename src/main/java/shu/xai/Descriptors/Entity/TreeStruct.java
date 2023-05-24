@@ -1,14 +1,10 @@
 package shu.xai.Descriptors.Entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import shu.xai.Descriptors.Vo.AddTreeNode;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 
 /**
@@ -23,12 +19,22 @@ public class TreeStruct {
     private ArrayList<String> ChildrenId;
     private ArrayList<String> ChildrenName;
     private String TreeType;
+    private Double Score;
+
+    public Double getScore() {
+        return Score;
+    }
+
+    public void setScore(Double score) {
+        Score = score;
+    }
 
     public TreeStruct(AddTreeNode addTreeNode) {
         Id = addTreeNode.getId();
         NodeName=addTreeNode.getNodeName();
         ParentId=addTreeNode.getParentId();
         TreeType=addTreeNode.getTreeType();
+        Score=addTreeNode.getScore();
         ChildrenId=new ArrayList<>();
         ChildrenName=new ArrayList<>();
 

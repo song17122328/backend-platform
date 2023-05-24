@@ -46,7 +46,9 @@ public class TreeStructDao {
         if (struct.getTreeType() != null && !struct.getTreeType().isEmpty()) {
             criteria.and("TreeType").regex(struct.getTreeType());
         }
-
+        if (struct.getScore() != null) {
+            criteria.and("Score").is(struct.getScore());
+        }
         if (struct.getChildrenName() != null && !struct.getChildrenName().isEmpty()) {
             criteria.and("ChildrenName").is(struct.getChildrenName().get(0));
         }

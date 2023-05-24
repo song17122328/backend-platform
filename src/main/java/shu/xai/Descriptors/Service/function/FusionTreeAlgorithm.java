@@ -86,6 +86,8 @@ public class FusionTreeAlgorithm {
                     TreeNode node=A.getChildren().get(i);
                     node.setFrom("mix");
                     node.setTreeType("fusion");
+                    node.setScore(node.getScore()+0.5);
+//                    System.out.println(node.getNodeName()+":"+node.getScore());
                     C.addChild(node);
 //                    System.out.println("C"+C);
                     Recursion(A.getChildren().get(i),B.getChildren().get(i),C.getChildren().get(i));
@@ -139,6 +141,7 @@ public class FusionTreeAlgorithm {
                     TreeNode node=A.getChildren().get(i);
                     node.setFrom("mix");
                     node.setTreeType("fusion");
+                    node.setScore(node.getScore()+0.5);
                     C.addChild(node);
                     Recursion(A.getChildren().get(i),B.getChildren().get(j),C.getChildren().get(k));
                     k=k+1;
@@ -166,7 +169,7 @@ public class FusionTreeAlgorithm {
 
     public void UpdateId(TreeNode fusion){
         fusion.setId(fusion.getId()+"_fusion");
-        fusion.setFatherId(fusion.getFatherId()+"_fusion");
+        fusion.setParentId(fusion.getParentId()+"_fusion");
         if (fusion.getChildren()!=null &&fusion.getChildren().size()!=0){
             for(TreeNode child:fusion.getChildren()){
                 UpdateId(child);

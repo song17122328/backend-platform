@@ -32,6 +32,8 @@ public class FusionTreeController {
         if (size>2){
             for (int i=2;i<size;i++){
                 fusion=fusionTreeAlgorithm.GetFusionTree(fusion, Trees.get(i));
+                System.out.println("执行第2次,size="+size);
+                System.out.println(Types);
             }
         }
 //        System.out.println(fusion);

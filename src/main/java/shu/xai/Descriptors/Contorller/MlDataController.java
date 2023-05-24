@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import shu.xai.Descriptors.Service.MlDataService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/MlData")
 public class MlDataController {
@@ -16,6 +19,13 @@ public class MlDataController {
     //   自动装配
     @Autowired
     private MlDataService mlDataService;
+
+
+    //    基于分页查询的模糊查询 基于模糊查询的分页查询：逻辑：先模糊查询，再包装对象，分页显示。
+    @GetMapping("")
+    public List<MlData> GetAll(){
+        return mlDataService.findAll();
+    }
 
 
     //    基于分页查询的模糊查询 基于模糊查询的分页查询：逻辑：先模糊查询，再包装对象，分页显示。
