@@ -189,7 +189,9 @@ public class TreeController {
     public String DeleteTree(@RequestBody AddTreeNode addTreeNode){
 
         TreeStruct treeStruct = treeStructService.findById(addTreeNode.getId());
-
+        if(treeStruct==null){
+            return "数据库无此数据，不需要删除";
+        }
         String parentId = treeStruct.getParentId();
         if (parentId==null || parentId.length()==0){
 //            说明是根节点，不需要修改其父亲
